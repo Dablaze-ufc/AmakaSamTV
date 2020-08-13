@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "35526225363",
+    "firebase_url": "https://amakasamtv-33013.firebaseio.com",
+    "project_id": "amakasamtv-33013",
+    "storage_bucket": "amakasamtv-33013.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:35526225363:android:58f17a689cbb82041dd326",
+        "android_client_info": {
+          "package_name": "com.blazingtech.amakasamtv"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "35526225363-7q5ci8qgtkkuit6h9ksjqegefoppjejh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmO7Et7lkJFmx9kwMLEPmYg2n4llBk-Rg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "35526225363-7q5ci8qgtkkuit6h9ksjqegefoppjejh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
