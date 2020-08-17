@@ -21,6 +21,7 @@ class DownloadsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.downloads_fragment, container, false)
+
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

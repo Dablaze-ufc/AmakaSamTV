@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="textSize">26sp</dimen>
+    <dimen name="marginSpace">28dp</dimen>
+    <dimen name="cornerRadius">7dp</dimen>
+    <dimen name="boxStroke">2dp</dimen>
+    <dimen name="eight">8dp</dimen>
+    <dimen name="zero">0dp</dimen>
+    <dimen name="nine">9dp</dimen>
+    <dimen name="fifteen">15sp</dimen>
+    <dimen name="sixteen">16dp</dimen>
+    <dimen name="five">5dp</dimen>
+    <dimen name="twentyTwo">22sp</dimen>
+    <dimen name="twentyFour">24dp</dimen>
+    <dimen name="two">2dp</dimen>
+</resources>

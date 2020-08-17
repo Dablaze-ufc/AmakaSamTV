@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="@color/colorBlack">
+
+<androidx.constraintlayout.widget.ConstraintLayout
     android:background="@color/colorBlack"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".ui.auth.register.SignUpFragment">
 
     <ImageView
@@ -16,4 +22,163 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewDummySignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sign_up"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/textSize"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toStartOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputFieldName"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginSpace"
+        android:layout_marginTop="@dimen/eight"
+        android:layout_marginEnd="@dimen/marginSpace"
+        android:textColorHint="@color/colorWhite"
+        app:boxBackgroundColor="@color/colorBox"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomEnd="@dimen/cornerRadius"
+        app:boxCornerRadiusBottomStart="@dimen/cornerRadius"
+        app:boxCornerRadiusTopEnd="@dimen/cornerRadius"
+        app:boxCornerRadiusTopStart="@dimen/cornerRadius"
+        app:boxStrokeWidth="@dimen/boxStroke"
+        app:boxStrokeWidthFocused="@dimen/boxStroke"
+        app:hintTextColor="@color/colorWhite"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDummySignUp"
+        app:startIconDrawable="@drawable/icon_name"
+        app:startIconTint="@color/colorAccent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/name"
+            android:inputType="textPersonName"
+            android:textColor="@color/colorWhite" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputFieldSignUpEmail"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/eight"
+        android:textColorHint="@color/colorWhite"
+        app:boxBackgroundColor="@color/colorBox"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomEnd="@dimen/cornerRadius"
+        app:boxCornerRadiusBottomStart="@dimen/cornerRadius"
+        app:boxCornerRadiusTopEnd="@dimen/cornerRadius"
+        app:boxCornerRadiusTopStart="@dimen/cornerRadius"
+        app:boxStrokeWidth="@dimen/boxStroke"
+        app:boxStrokeWidthFocused="@dimen/boxStroke"
+        app:layout_constraintEnd_toEndOf="@+id/textInputFieldName"
+        app:layout_constraintStart_toStartOf="@+id/textInputFieldName"
+        app:layout_constraintTop_toBottomOf="@+id/textInputFieldName"
+        app:startIconDrawable="@drawable/icon_email"
+        app:startIconTint="@color/colorAccent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/colorWhite" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputFieldSignUpPassword"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/eight"
+        android:textColorHint="@color/colorWhite"
+        app:boxBackgroundColor="@color/colorBox"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomEnd="@dimen/cornerRadius"
+        app:boxCornerRadiusBottomStart="@dimen/cornerRadius"
+        app:boxCornerRadiusTopEnd="@dimen/cornerRadius"
+        app:boxCornerRadiusTopStart="@dimen/cornerRadius"
+        app:boxStrokeWidth="@dimen/boxStroke"
+        app:boxStrokeWidthFocused="@dimen/boxStroke"
+        app:hintTextColor="@color/colorWhite"
+        app:layout_constraintEnd_toEndOf="@+id/textInputFieldSignUpEmail"
+        app:layout_constraintStart_toStartOf="@+id/textInputFieldSignUpEmail"
+        app:layout_constraintTop_toBottomOf="@+id/textInputFieldSignUpEmail"
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="@color/colorAccent"
+        app:startIconDrawable="@drawable/icon_password"
+        app:startIconTint="@color/colorAccent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/password"
+            android:inputType="textPersonName"
+            android:textColor="@color/colorWhite" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputFieldConfirmPassword"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/eight"
+        android:textColorHint="@color/colorWhite"
+        app:boxBackgroundColor="@color/colorBox"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomEnd="@dimen/cornerRadius"
+        app:boxCornerRadiusBottomStart="@dimen/cornerRadius"
+        app:boxCornerRadiusTopEnd="@dimen/cornerRadius"
+        app:boxCornerRadiusTopStart="@dimen/cornerRadius"
+        app:boxStrokeWidth="@dimen/boxStroke"
+        app:boxStrokeWidthFocused="@dimen/boxStroke"
+        app:hintTextColor="@color/colorWhite"
+        app:layout_constraintEnd_toEndOf="@+id/textInputFieldSignUpPassword"
+        app:layout_constraintStart_toStartOf="@+id/textInputFieldSignUpPassword"
+        app:layout_constraintTop_toBottomOf="@+id/textInputFieldSignUpPassword"
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="@color/colorAccent"
+        app:startIconDrawable="@drawable/icon_password"
+        app:startIconTint="@color/colorAccent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/confirm_password"
+            android:inputType="textPersonName"
+            android:textColor="@color/colorWhite" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonSignUp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:elevation="@dimen/zero"
+        android:enabled="false"
+        android:text="@string/sign_up"
+        android:textAllCaps="false"
+        android:textColor="@color/colorBlack"
+        app:cornerRadius="@dimen/nine"
+        app:elevation="@dimen/zero"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/textInputFieldConfirmPassword"
+        app:layout_constraintStart_toStartOf="@+id/textInputFieldConfirmPassword"
+        app:layout_constraintTop_toBottomOf="@+id/textInputFieldConfirmPassword" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

@@ -7,4 +7,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="MenuStyle" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="android:background">@color/colorBlack</item>
+    </style>
+
 </resources>

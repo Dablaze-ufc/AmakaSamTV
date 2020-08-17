@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBlack">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBlack"
+        tools:context=".ui.auth.register.SignInFragment">
+
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/amaka_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textViewDummySignIn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="@string/sign_in"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/textSize"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/imageView"
+            app:layout_constraintStart_toStartOf="@+id/imageView"
+            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputFieldSignInEmail"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/marginSpace"
+            android:layout_marginTop="@dimen/eight"
+            android:layout_marginEnd="@dimen/marginSpace"
+            android:textColorHint="@color/colorWhite"
+            app:boxBackgroundColor="@color/colorBox"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusBottomEnd="@dimen/cornerRadius"
+            app:boxCornerRadiusBottomStart="@dimen/cornerRadius"
+            app:boxCornerRadiusTopEnd="@dimen/cornerRadius"
+            app:boxCornerRadiusTopStart="@dimen/cornerRadius"
+            app:boxStrokeWidth="@dimen/boxStroke"
+            app:boxStrokeWidthFocused="@dimen/boxStroke"
+            app:hintTextColor="@color/colorWhite"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewDummySignIn"
+            app:startIconDrawable="@drawable/icon_email"
+            app:startIconTint="@color/colorAccent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress"
+                android:textColor="@color/colorWhite" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputFieldSignInPassword"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginSpace"
+            android:textColorHint="@color/colorWhite"
+            app:boxBackgroundColor="@color/colorBox"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusBottomEnd="@dimen/cornerRadius"
+            app:boxCornerRadiusBottomStart="@dimen/cornerRadius"
+            app:boxCornerRadiusTopEnd="@dimen/cornerRadius"
+            app:boxCornerRadiusTopStart="@dimen/cornerRadius"
+            app:boxStrokeWidth="@dimen/boxStroke"
+            app:boxStrokeWidthFocused="@dimen/boxStroke"
+            app:hintTextColor="@color/colorWhite"
+            app:layout_constraintEnd_toEndOf="@+id/textInputFieldSignInEmail"
+            app:layout_constraintStart_toStartOf="@+id/textInputFieldSignInEmail"
+            app:layout_constraintTop_toBottomOf="@+id/textInputFieldSignInEmail"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/colorAccent"
+            app:passwordToggleTintMode="src_in"
+            app:startIconDrawable="@drawable/icon_password"
+            app:startIconTint="@color/colorAccent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/password"
+                android:inputType="textPersonName"
+                android:textColor="@color/colorWhite"
+                android:textColorHint="@color/colorWhite" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/buttonSignIn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginSpace"
+            android:backgroundTint="@color/colorPrimary"
+            android:elevation="@dimen/zero"
+            android:enabled="false"
+            android:text="@string/login"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            app:cornerRadius="@dimen/nine"
+            app:elevation="@dimen/zero"
+            app:layout_constraintEnd_toEndOf="@+id/textInputFieldSignInPassword"
+            app:layout_constraintStart_toStartOf="@+id/textInputFieldSignInPassword"
+            app:layout_constraintTop_toBottomOf="@+id/textInputFieldSignInPassword" />
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sixteen"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="@+id/buttonSignIn"
+            app:layout_constraintStart_toStartOf="@+id/buttonSignIn"
+            app:layout_constraintTop_toBottomOf="@+id/buttonSignIn">
+
+            <TextView
+                android:id="@+id/textViewDummyAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/account"
+                android:textAlignment="center"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/fifteen" />
+
+            <TextView
+                android:id="@+id/textViewSignUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/five"
+                android:layout_toEndOf="@+id/textViewDummyAccount"
+                android:text="@string/sign_up"
+                android:textColor="@color/text_color_state"
+                android:textSize="@dimen/fifteen" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textViewForgotYourPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/eight"
+            android:layout_marginBottom="@dimen/eight"
+            android:text="@string/forgot_your_password"
+            android:textColor="@color/text_color_state"
+            android:textSize="@dimen/fifteen"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/relativeLayout2"
+            app:layout_constraintStart_toStartOf="@+id/relativeLayout2"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout2" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

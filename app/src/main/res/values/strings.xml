@@ -1,3 +1,16 @@
 <resources>
-    <string name="app_name">AmakaSamTV</string>
+    <string name="app_name">AmakaSam TV</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="login">Login</string>
+    <string name="account">Don\'t Have an account?</string>
+    <string name="forgot_your_password">Forgot your password?</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="long_question">We just need your registered Email address to send you password reset instructions.</string>
+    <string name="cancel">Cancel</string>
+    <string name="reset_password">Reset password</string>
 </resources>
