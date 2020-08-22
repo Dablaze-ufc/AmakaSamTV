@@ -13,4 +13,6 @@
     <dimen name="twentyTwo">22sp</dimen>
     <dimen name="twentyFour">24dp</dimen>
     <dimen name="two">2dp</dimen>
+    <dimen name="fifty">50dp</dimen>
+    <dimen name="sixty">60dp</dimen>
 </resources>

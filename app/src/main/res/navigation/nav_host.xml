@@ -9,7 +9,16 @@
         android:id="@+id/signUpFragment"
         android:name="com.blazingtech.amakasamtv.ui.auth.register.SignUpFragment"
         android:label="sign_up_fragment"
-        tools:layout="@layout/sign_up_fragment" />
+        tools:layout="@layout/sign_up_fragment" >
+        <action
+            android:id="@+id/action_signUpFragment_to_signInFragment"
+            app:destination="@id/signInFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_in" />
+    </fragment>
     <fragment
         android:id="@+id/dashBoardFragment"
         android:name="com.blazingtech.amakasamtv.ui.dashboard.DashBoardFragment"

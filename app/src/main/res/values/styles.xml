@@ -11,4 +11,10 @@
         <item name="android:background">@color/colorBlack</item>
     </style>
 
+    <style name="buttonStyle">
+        <item name="backgroundTint">@color/button_color_background</item>
+        <item name="cornerRadius">10dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+    </style>
 </resources>

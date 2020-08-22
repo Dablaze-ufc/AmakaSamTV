@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "71642515663",
+    "firebase_url": "https://amakasamtv-c96ca.firebaseio.com",
+    "project_id": "amakasamtv-c96ca",
+    "storage_bucket": "amakasamtv-c96ca.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:71642515663:android:c3f2590c245a1edce54fba",
+        "android_client_info": {
+          "package_name": "com.blazingtech.amakasamtv"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "71642515663-vfgptss012uuf8jccvphoemj4e3q19p1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.blazingtech.amakasamtv",
+            "certificate_hash": "8d690fa097858fb213bd81a3d991dbc103bddc90"
+          }
+        },
+        {
+          "client_id": "71642515663-kevp1s8tkatd512cb8gc3bc4fjslo9rv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGmGxrO7DDF68vRRpMnZwHyGpqaxsc4aU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "71642515663-kevp1s8tkatd512cb8gc3bc4fjslo9rv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

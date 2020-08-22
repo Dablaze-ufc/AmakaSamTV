@@ -6,4 +6,5 @@
     <color name="colorBlack">#000000</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBox">#2B2B2B</color>
+    <color name="button_color_disabled">#EAE5BA</color>
 </resources>
