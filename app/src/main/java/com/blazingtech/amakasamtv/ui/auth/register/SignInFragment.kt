@@ -8,7 +8,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import com.blazingtech.amakasamtv.R
 import com.google.android.material.snackbar.Snackbar
@@ -79,7 +78,7 @@ class SignInFragment : Fragment() {
             disableAllViews(false)
             viewModel.signInWithEmailAndPassword(email, password)
 
-            viewModel.authState.observe(viewLifecycleOwner, Observer { user ->
+            viewModel.authState.observe(viewLifecycleOwner,  { user ->
                 user?.let {
                     if (!isUserVerified(it)) {
                         val snackBar: Snackbar = Snackbar
@@ -106,7 +105,7 @@ class SignInFragment : Fragment() {
     }
 
     private fun setUpFireBaseAuth() {
-        viewModel.authState.observe(viewLifecycleOwner, Observer { user ->
+        viewModel.authState.observe(viewLifecycleOwner, { user ->
             user?.let {
                 if (it.isEmailVerified) {
                     Timber.i("onAuthStateChanged: Authenticated with%s", it.email)
@@ -207,6 +206,4 @@ class SignInFragment : Fragment() {
         textViewForgotYourPassword?.isEnabled = state
         buttonSignIn?.text = ""
     }
-
-
 }

@@ -23,7 +23,8 @@
         android:src="@drawable/amaka_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/logo_image" />
 
     <TextView
         android:id="@+id/textViewDummySignUp"
@@ -61,14 +62,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewDummySignUp"
-        app:startIconDrawable="@drawable/icon_name"
+
         app:startIconTint="@color/colorAccent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:hint="@string/name"
+            android:maxLength="20"
             android:inputType="textPersonName"
+            android:drawableStart="@drawable/icon_name"
+            android:drawablePadding="18dp"
             android:textColor="@color/colorWhite" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -90,12 +94,13 @@
         app:layout_constraintEnd_toEndOf="@+id/textInputFieldName"
         app:layout_constraintStart_toStartOf="@+id/textInputFieldName"
         app:layout_constraintTop_toBottomOf="@+id/textInputFieldName"
-        app:startIconDrawable="@drawable/icon_email"
         app:startIconTint="@color/colorAccent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:drawableStart="@drawable/icon_email"
+            android:drawablePadding="18dp"
             android:hint="@string/email"
             android:inputType="textEmailAddress"
             android:textColor="@color/colorWhite" />
@@ -122,14 +127,15 @@
         app:layout_constraintTop_toBottomOf="@+id/textInputFieldSignUpEmail"
         app:passwordToggleEnabled="true"
         app:passwordToggleTint="@color/colorAccent"
-        app:startIconDrawable="@drawable/icon_password"
         app:startIconTint="@color/colorAccent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:drawableStart="@drawable/icon_password"
+            android:drawablePadding="18dp"
             android:hint="@string/password"
-            android:inputType="textPersonName"
+            android:inputType="textPassword"
             android:textColor="@color/colorWhite" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -154,14 +160,15 @@
         app:layout_constraintTop_toBottomOf="@+id/textInputFieldSignUpPassword"
         app:passwordToggleEnabled="true"
         app:passwordToggleTint="@color/colorAccent"
-        app:startIconDrawable="@drawable/icon_password"
         app:startIconTint="@color/colorAccent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:drawableStart="@drawable/icon_password"
+            android:drawablePadding="18dp"
             android:hint="@string/confirm_password"
-            android:inputType="textPersonName"
+            android:inputType="textPassword"
             android:textColor="@color/colorWhite" />
     </com.google.android.material.textfield.TextInputLayout>
 
