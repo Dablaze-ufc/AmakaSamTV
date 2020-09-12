@@ -167,7 +167,7 @@ class SignUpFragment : Fragment() {
     }
 
     /**
-     * --------------setup Firebase Register with Email & Password---------------
+     * --------------setup Firebase Sign up with Email & Password---------------
      */
 
     private fun signUpWithEmailAndPassword(
@@ -187,6 +187,7 @@ class SignUpFragment : Fragment() {
                         val firebaseUser: FirebaseUser = auth.currentUser!!
                         val uid = firebaseUser.uid
                         //TODO("FireStore Save Username")
+
                         sendVerificationCode()
                         removeProgressBar()
                         disableAllViews(true)
@@ -195,8 +196,7 @@ class SignUpFragment : Fragment() {
                         val snackBar: Snackbar = Snackbar
                             .make(
                                 constraintLayoutSignUp,
-                                "Unable to register, " +
-                                        "please Check your internet connection and try again",
+                                "Unable to register, ${task.exception.toString()}",
                                 Snackbar.LENGTH_LONG
                             )
                             .setAction("Retry") {
@@ -272,6 +272,7 @@ class SignUpFragment : Fragment() {
         editTextFieldEmailSignUp.isEnabled = state
         editTextFieldPasswordSignUp.isEnabled = state
         editTextFieldConfirmPasswordSignUp.isEnabled = state
+        NestedScrollViewSignUp?.isEnabled = state
         buttonSignUp?.isEnabled = state
         buttonSignUp?.text = ""
     }
