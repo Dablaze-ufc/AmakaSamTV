@@ -19,7 +19,7 @@
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="300dp"
             android:scaleType="centerCrop"
             android:src="@drawable/amaka_image"
             app:layout_constraintEnd_toEndOf="parent"
@@ -31,6 +31,7 @@
             android:id="@+id/textViewDummySignIn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:text="@string/sign_in"
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/textSize"
