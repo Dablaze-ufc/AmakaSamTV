@@ -21,22 +21,29 @@ class ForgetPasswordDialog : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.forgot_password_fragment, container, false)
-        buttonCancel?.setOnClickListener {
+        return inflater.inflate(R.layout.forgot_password_fragment, container, false)
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
+        buttonCancel.setOnClickListener {
             this.dismiss()
         }
 
-        buttonResetPassword?.isEnabled = true
-        buttonResetPassword?.setOnClickListener {
+        buttonResetPassword.isEnabled = true
+        buttonResetPassword.setOnClickListener {
             if (!validateResetPassword()){
                 returnTransition
             }else{
                 resetPassword(resetPasswordEmail = textInputFieldForgotPasswordEmail.editText!!.text.toString().trim())
             }
         }
-        return view
-    }
 
+
+    }
     // reset password link code
     private fun resetPassword(
         resetPasswordEmail: String

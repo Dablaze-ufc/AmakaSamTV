@@ -1,4 +1,4 @@
-package com.blazingtech.amakasamtv.ui.auth.register
+package com.blazingtech.amakasamtv.ui.auth.signin
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

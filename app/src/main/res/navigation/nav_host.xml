@@ -41,7 +41,7 @@
         tools:layout="@layout/search_fragment" />
     <fragment
         android:id="@+id/signInFragment"
-        android:name="com.blazingtech.amakasamtv.ui.auth.register.SignInFragment"
+        android:name="com.blazingtech.amakasamtv.ui.auth.signin.SignInFragment"
         android:label="sign_in_fragment"
         tools:layout="@layout/sign_in_fragment" >
         <action

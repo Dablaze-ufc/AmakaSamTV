@@ -1,4 +1,4 @@
-package com.blazingtech.amakasamtv.ui.auth.register
+package com.blazingtech.amakasamtv.ui.auth.signin
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,11 +8,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.observe
 import androidx.navigation.Navigation
 import com.blazingtech.amakasamtv.R
+import com.blazingtech.amakasamtv.ui.auth.register.ForgetPasswordDialog
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseUser
@@ -37,7 +35,6 @@ class SignInFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.sign_in_fragment, container, false)
 
-        setUpFireBaseAuth()
         view.apply {
             textViewSignUp.setOnClickListener {
                 Navigation.findNavController(view)
@@ -64,10 +61,28 @@ class SignInFragment : Fragment() {
         return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.authState.observe(viewLifecycleOwner, {user ->
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
+            user?.let{
+                if (it.isEmailVerified) {
+                Timber.i("onAuthStateChanged: Authenticated with%s", it.email)
+                Timber.i("onAuthStateChanged: sign_in%s", it.uid)
+            } else {
+                val snackBar = Snackbar
+                    .make(
+                        constraintLayoutSignIn,
+                        "Please verify your email, before signing in",
+                        Snackbar.LENGTH_LONG
+                    )
+                removeProgressBar()
+                disableAllViews(true)
+                buttonSignIn?.text = getString(R.string.login)
+                viewModel.signOut()
+                snackBar.show()
+            }}
+        })
     }
 
     private fun signInWithEmailAndPassword(
@@ -78,7 +93,7 @@ class SignInFragment : Fragment() {
             setUpProgressBar()
             disableAllViews(false)
             viewModel.signInWithEmailAndPassword(email, password)
-            viewModel.authState.observe(viewLifecycleOwner, Observer { user ->
+            viewModel.authState.observe(viewLifecycleOwner, { user ->
                     if (!isUserVerified(user)) {
                         val snackBar: Snackbar = Snackbar
                             .make(
@@ -99,29 +114,6 @@ class SignInFragment : Fragment() {
 
             })
         }
-    }
-
-    private fun setUpFireBaseAuth() {
-        viewModel.authState.observe(viewLifecycleOwner, Observer {user ->
-
-                if (user!!.isEmailVerified) {
-                    Timber.i("onAuthStateChanged: Authenticated with%s", user.email)
-                    Timber.i("onAuthStateChanged: sign_in%s", user.uid)
-                } else {
-                    val snackBar = Snackbar
-                        .make(
-                            constraintLayoutSignIn,
-                            "Please verify your email, before signing in",
-                            Snackbar.LENGTH_LONG
-                        )
-                    removeProgressBar()
-                    disableAllViews(true)
-                    buttonSignIn?.text = getString(R.string.login)
-                    viewModel.signOut()
-                    snackBar.show()
-                }
-        })
-
     }
 
     // validations
@@ -148,7 +140,7 @@ class SignInFragment : Fragment() {
 
     private fun initValidatePasswordSignIn(): Boolean {
         passwordSignIn = editTextFieldPasswordSignIn.editText?.text.toString().trim()
-        val passwordPattern = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]))"
+//        val passwordPattern = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]))"
 
         return when {
             (passwordSignIn.isEmpty()) -> {
