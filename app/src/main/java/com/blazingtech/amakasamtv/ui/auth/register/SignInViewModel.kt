@@ -13,9 +13,10 @@ class SignInViewModel : ViewModel() {
     private val _authState = MutableLiveData<FirebaseUser>()
     private val _isSuccessful = MutableLiveData<Boolean>()
 
-    val authState : LiveData<FirebaseUser> =  _authState
-    val isSuccessful : LiveData<Boolean> = _isSuccessful
-    
+    val authState: LiveData<FirebaseUser>
+        get() = _authState
+    val isSuccessful: LiveData<Boolean>
+        get() = _isSuccessful
 
 
     init {
@@ -27,18 +28,17 @@ class SignInViewModel : ViewModel() {
         _authState.value = auth.currentUser
     }
 
-    fun signInWithEmailAndPassword(email: String, password:String){
-        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
-            if (it.isSuccessful){
+    fun signInWithEmailAndPassword(email: String, password: String) {
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { user ->
+            if (user.isSuccessful) {
                 _authState.value = auth.currentUser
-            }
-            else{
+            } else {
                 _authState.value = null
             }
         }
     }
 
-    fun signOut(){
+    fun signOut() {
         auth.signOut()
     }
 
