@@ -84,13 +84,8 @@ class SignUpFragment : Fragment() {
                 editTextFieldNameSignUp.requestFocus()
                 false
             }
-            (nameSignUp.length < 10) -> {
+            (nameSignUp.length < 6) -> {
                 editTextFieldNameSignUp.error = "username too short!"
-                editTextFieldNameSignUp.requestFocus()
-                false
-            }
-            (nameSignUp.length > 20) -> {
-                editTextFieldNameSignUp.error = "username too long"
                 editTextFieldNameSignUp.requestFocus()
                 false
             }

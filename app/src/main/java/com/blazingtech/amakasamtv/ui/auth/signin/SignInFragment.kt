@@ -1,5 +1,6 @@
 package com.blazingtech.amakasamtv.ui.auth.signin
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,9 +9,12 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
+import com.blazingtech.amakasamtv.HomeActivity
 import com.blazingtech.amakasamtv.R
 import com.blazingtech.amakasamtv.ui.auth.register.ForgetPasswordDialog
+import com.blazingtech.amakasamtv.util.AuthenticationSate.*
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseUser
@@ -25,6 +29,7 @@ class SignInFragment : Fragment() {
     private lateinit var editTextFieldEmailSignIn: TextInputLayout
     private lateinit var editTextFieldPasswordSignIn: TextInputLayout
 
+
     private lateinit var emailSignIn: String
     private lateinit var passwordSignIn: String
 
@@ -34,7 +39,6 @@ class SignInFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.sign_in_fragment, container, false)
-
         view.apply {
             textViewSignUp.setOnClickListener {
                 Navigation.findNavController(view)
@@ -61,28 +65,47 @@ class SignInFragment : Fragment() {
         return view
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.authState.observe(viewLifecycleOwner, {user ->
+        viewModel.apply {
 
-            user?.let{
-                if (it.isEmailVerified) {
-                Timber.i("onAuthStateChanged: Authenticated with%s", it.email)
-                Timber.i("onAuthStateChanged: sign_in%s", it.uid)
-            } else {
-                val snackBar = Snackbar
-                    .make(
-                        constraintLayoutSignIn,
-                        "Please verify your email, before signing in",
-                        Snackbar.LENGTH_LONG
-                    )
-                removeProgressBar()
-                disableAllViews(true)
-                buttonSignIn?.text = getString(R.string.login)
-                viewModel.signOut()
-                snackBar.show()
-            }}
-        })
+            authenticationSate.observe(viewLifecycleOwner, Observer {state ->
+                when(state){
+                    AUTHENTICATED ->{
+                        startActivity(Intent(requireContext(), HomeActivity::class.java))
+                    }
+                    UNAUTHENTICATED -> {
+                        Toast.makeText(requireContext(), "Please login", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+
+                }
+            })
+
+            authState.observe(viewLifecycleOwner, Observer { user ->
+
+                user?.let {
+                    if (it.isEmailVerified) {
+                        Timber.i("onAuthStateChanged: Authenticated with%s", it.email)
+                        Timber.i("onAuthStateChanged: sign_in%s", it.uid)
+                    } else {
+                        val snackBar = Snackbar
+                            .make(
+                                constraintLayoutSignIn,
+                                "Please verify your email, before signing in",
+                                Snackbar.LENGTH_LONG
+                            )
+                        removeProgressBar()
+                        disableAllViews(true)
+                        buttonSignIn?.text = getString(R.string.login)
+                        viewModel.signOut()
+                        snackBar.show()
+                    }
+                }
+            })
+
+        }
     }
 
     private fun signInWithEmailAndPassword(
@@ -93,24 +116,24 @@ class SignInFragment : Fragment() {
             setUpProgressBar()
             disableAllViews(false)
             viewModel.signInWithEmailAndPassword(email, password)
-            viewModel.authState.observe(viewLifecycleOwner, { user ->
-                    if (!isUserVerified(user)) {
-                        val snackBar: Snackbar = Snackbar
-                            .make(
-                                constraintLayoutSignIn,
-                                "Your Email has not been verified ",
-                                Snackbar.LENGTH_LONG
-                            )
-                        snackBar.show()
-                    } else {
-//                          TODO("Navigation")
-//                          TODO("Show the appBar and the Bottom navigation")
-                        Toast.makeText(activity, "Authentication Successful", Toast.LENGTH_LONG)
-                            .show()
-                        removeProgressBar()
-                        disableAllViews(true)
-                        buttonSignIn?.text = getString(R.string.login)
-                    }
+            viewModel.authState.observe(viewLifecycleOwner, Observer { user ->
+                if (!isUserVerified(user)) {
+                    val snackBar: Snackbar = Snackbar
+                        .make(
+                            constraintLayoutSignIn,
+                            "Your Email has not been verified ",
+                            Snackbar.LENGTH_LONG
+                        )
+                    snackBar.show()
+                } else {
+                    Toast.makeText(activity, "Authentication Successful", Toast.LENGTH_LONG)
+                        .show()
+                    removeProgressBar()
+                    disableAllViews(true)
+                    buttonSignIn?.text = getString(R.string.login)
+                    startActivity(Intent(activity, HomeActivity::class.java))
+                    activity?.finish()
+                }
 
             })
         }
@@ -164,7 +187,10 @@ class SignInFragment : Fragment() {
 
     // verifying if user has check link
     private fun isUserVerified(users: FirebaseUser?): Boolean {
-        return users!!.isEmailVerified
+        users?.let {
+           return it.isEmailVerified
+        }
+        return false
     }
 
     // set up progress bar
@@ -187,4 +213,5 @@ class SignInFragment : Fragment() {
         textViewForgotYourPassword?.isEnabled = state
         buttonSignIn?.text = ""
     }
+
 }

@@ -20,26 +20,6 @@
             app:popExitAnim="@anim/fade_in" />
     </fragment>
     <fragment
-        android:id="@+id/dashBoardFragment"
-        android:name="com.blazingtech.amakasamtv.ui.dashboard.DashBoardFragment"
-        android:label="dash_board_fragment"
-        tools:layout="@layout/dash_board_fragment" />
-    <fragment
-        android:id="@+id/profileFragment"
-        android:name="com.blazingtech.amakasamtv.ui.profile.ProfileFragment"
-        android:label="profile_fragment"
-        tools:layout="@layout/profile_fragment" />
-    <fragment
-        android:id="@+id/downloadsFragment"
-        android:name="com.blazingtech.amakasamtv.ui.downloads.DownloadsFragment"
-        android:label="downloads_fragment"
-        tools:layout="@layout/downloads_fragment" />
-    <fragment
-        android:id="@+id/searchFragment"
-        android:name="com.blazingtech.amakasamtv.ui.search.SearchFragment"
-        android:label="search_fragment"
-        tools:layout="@layout/search_fragment" />
-    <fragment
         android:id="@+id/signInFragment"
         android:name="com.blazingtech.amakasamtv.ui.auth.signin.SignInFragment"
         android:label="sign_in_fragment"

@@ -47,9 +47,6 @@
         android:layout_marginTop="@dimen/eight"
         android:layout_marginEnd="@dimen/marginSpace"
         android:textColorHint="@color/colorWhite"
-        app:counterEnabled="true"
-        app:counterMaxLength="20"
-        app:counterTextColor="@color/colorWhite"
         app:boxBackgroundColor="@color/colorBox"
         app:boxBackgroundMode="outline"
         app:boxCornerRadiusBottomEnd="@dimen/cornerRadius"
@@ -58,21 +55,24 @@
         app:boxCornerRadiusTopStart="@dimen/cornerRadius"
         app:boxStrokeWidth="@dimen/boxStroke"
         app:boxStrokeWidthFocused="@dimen/boxStroke"
+        app:counterTextColor="@color/colorWhite"
         app:hintTextColor="@color/colorWhite"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewDummySignUp"
 
+        app:placeholderText="amaka sam"
+        app:placeholderTextColor="@color/colorWhite"
         app:startIconTint="@color/colorAccent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="@string/name"
-            android:maxLength="20"
-            android:inputType="textPersonName"
             android:drawableStart="@drawable/icon_name"
             android:drawablePadding="18dp"
+            android:hint="@string/name"
+            android:inputType="textPersonName"
+            android:maxLength="20"
             android:textColor="@color/colorWhite" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -94,6 +94,8 @@
         app:layout_constraintEnd_toEndOf="@+id/textInputFieldName"
         app:layout_constraintStart_toStartOf="@+id/textInputFieldName"
         app:layout_constraintTop_toBottomOf="@+id/textInputFieldName"
+        app:placeholderText="example@gmail.com"
+        app:placeholderTextColor="@color/colorWhite"
         app:startIconTint="@color/colorAccent">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -127,6 +129,8 @@
         app:layout_constraintTop_toBottomOf="@+id/textInputFieldSignUpEmail"
         app:passwordToggleEnabled="true"
         app:passwordToggleTint="@color/colorAccent"
+        app:placeholderText="Amaka123"
+        app:placeholderTextColor="@color/colorWhite"
         app:startIconTint="@color/colorAccent">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -160,6 +164,8 @@
         app:layout_constraintTop_toBottomOf="@+id/textInputFieldSignUpPassword"
         app:passwordToggleEnabled="true"
         app:passwordToggleTint="@color/colorAccent"
+        app:placeholderText="Amaka123"
+        app:placeholderTextColor="@color/colorWhite"
         app:startIconTint="@color/colorAccent">
 
         <com.google.android.material.textfield.TextInputEditText

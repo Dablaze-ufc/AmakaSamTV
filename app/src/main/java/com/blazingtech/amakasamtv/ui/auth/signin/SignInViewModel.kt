@@ -3,25 +3,39 @@ package com.blazingtech.amakasamtv.ui.auth.signin
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
+import com.blazingtech.amakasamtv.util.AuthenticationSate.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
 
-class SignInViewModel : ViewModel() {
+class SignInViewModel : ViewModel()  {
     private val auth = FirebaseAuth.getInstance()
 
     private val _authState = MutableLiveData<FirebaseUser>()
     private val _isSuccessful = MutableLiveData<Boolean>()
 
-    val authState: LiveData<FirebaseUser>
-        get() = _authState
-    val isSuccessful: LiveData<Boolean>
-        get() = _isSuccessful
+
+    val authState: LiveData<FirebaseUser> = _authState
+    val isSuccessful: LiveData<Boolean> = _isSuccessful
+
+
+
+
+    val authenticationSate = FirebaseUserLiveData().map {
+        if (it != null){
+            AUTHENTICATED
+        }else{
+            UNAUTHENTICATED
+        }
+    }
 
 
     init {
         setUpFireBaseAuth()
     }
+
+
 
 
     private fun setUpFireBaseAuth() {
@@ -41,5 +55,7 @@ class SignInViewModel : ViewModel() {
     fun signOut() {
         auth.signOut()
     }
+
+
 
 }

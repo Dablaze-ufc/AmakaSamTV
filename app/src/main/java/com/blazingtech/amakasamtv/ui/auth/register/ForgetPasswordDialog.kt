@@ -48,9 +48,11 @@ class ForgetPasswordDialog : DialogFragment() {
     private fun resetPassword(
         resetPasswordEmail: String
     ) {
+
         showProgressBar()
         textInputFieldForgotPasswordEmail.isEnabled = false
         buttonResetPassword?.isEnabled = false
+        buttonResetPassword?.text = ""
 
         auth.sendPasswordResetEmail(resetPasswordEmail).addOnSuccessListener {
             dialogResetEmail()
