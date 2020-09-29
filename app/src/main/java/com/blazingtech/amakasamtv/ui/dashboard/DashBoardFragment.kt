@@ -10,9 +10,6 @@ import com.blazingtech.amakasamtv.R
 
 class DashBoardFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = DashBoardFragment()
-    }
 
     private lateinit var viewModel: DashBoardViewModel
 
@@ -20,7 +17,7 @@ class DashBoardFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.dash_board_fragment, container, false)
+        return inflater.inflate(R.layout.dashboard_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

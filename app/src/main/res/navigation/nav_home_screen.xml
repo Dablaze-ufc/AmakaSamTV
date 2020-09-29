@@ -2,27 +2,27 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_home"
-    app:startDestination="@id/homeFragment">
+    android:id="@+id/nav_home_screen"
+    app:startDestination="@id/dashBoardFragment">
 
     <fragment
-        android:id="@+id/homeFragment"
+        android:id="@+id/dashBoardFragment"
         android:name="com.blazingtech.amakasamtv.ui.dashboard.DashBoardFragment"
-        android:label="home"
-        tools:layout="@layout/dash_board_fragment" />
+        android:label="dash_board_fragment"
+        tools:layout="@layout/dashboard_fragment" />
+    <fragment
+        android:id="@+id/downloadsFragment"
+        android:name="com.blazingtech.amakasamtv.ui.downloads.DownloadsFragment"
+        android:label="downloads_fragment"
+        tools:layout="@layout/downloads_fragment" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.blazingtech.amakasamtv.ui.profile.ProfileFragment"
+        android:label="profile_fragment"
+        tools:layout="@layout/profile_fragment" />
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.blazingtech.amakasamtv.ui.search.SearchFragment"
         android:label="search_fragment"
         tools:layout="@layout/search_fragment" />
-    <fragment
-        android:id="@+id/downloadFragment"
-        android:name="com.blazingtech.amakasamtv.ui.downloads.DownloadsFragment"
-        android:label="downloads_fragment"
-        tools:layout="@layout/downloads_fragment" />
-    <fragment
-        android:id="@+id/menuFragment"
-        android:name="com.blazingtech.amakasamtv.ui.profile.ProfileFragment"
-        android:label="profile_fragment"
-        tools:layout="@layout/profile_fragment" />
 </navigation>
