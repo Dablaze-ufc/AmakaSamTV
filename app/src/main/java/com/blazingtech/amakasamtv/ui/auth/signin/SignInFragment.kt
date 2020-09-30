@@ -112,9 +112,9 @@ class SignInFragment : Fragment() {
         email: String,
         password: String
     ) {
+        setUpProgressBar()
+        disableAllViews(false)
         activity?.let {
-            setUpProgressBar()
-            disableAllViews(false)
             viewModel.signInWithEmailAndPassword(email, password)
             viewModel.authState.observe(viewLifecycleOwner, Observer { user ->
                 if (!isUserVerified(user)) {
@@ -185,10 +185,9 @@ class SignInFragment : Fragment() {
     }
 
 
-    // verifying if user has check link
     private fun isUserVerified(users: FirebaseUser?): Boolean {
         users?.let {
-           return it.isEmailVerified
+            return it.isEmailVerified
         }
         return false
     }

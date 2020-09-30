@@ -14,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.sign_up_fragment.*
 import kotlinx.android.synthetic.main.sign_up_fragment.view.*
 import timber.log.Timber
@@ -21,7 +22,10 @@ import timber.log.Timber
 class SignUpFragment : Fragment() {
 
     companion object {
-        fun newInstance() = SignUpFragment()
+        const val KEY_USER_ID = "uid"
+        const val KEY_USERNAME = "username"
+        const val KEY_USER_EMAIL = "email"
+        const val KEY_USER_PASSWORD = "password"
     }
 
     private lateinit var viewModel: SignUpViewModel
@@ -36,9 +40,13 @@ class SignUpFragment : Fragment() {
     private lateinit var nameSignUp: String
     private lateinit var emailSignUp: String
     private lateinit var passwordSignUp: String
+    private lateinit var uid : String
 
     // firebase
     private lateinit var auth: FirebaseAuth
+    private val db : FirebaseFirestore by lazy{
+        FirebaseFirestore.getInstance()
+    }
 
 
     override fun onCreateView(
@@ -155,12 +163,6 @@ class SignUpFragment : Fragment() {
 
     }
 
-    // string matchers
-    private fun stringMatches(password: String, confirmPassword: String): Boolean {
-        return password == confirmPassword
-
-    }
-
     /**
      * --------------setup Firebase Sign up with Email & Password---------------
      */
@@ -180,9 +182,8 @@ class SignUpFragment : Fragment() {
 
                         //firebase User
                         val firebaseUser: FirebaseUser = auth.currentUser!!
-                        val uid = firebaseUser.uid
-                        //TODO("FireStore Save Username")
-
+                        uid = firebaseUser.uid
+                        setUpFireStoreStorage()
                         sendVerificationCode()
                         removeProgressBar()
                         disableAllViews(true)
@@ -235,6 +236,29 @@ class SignUpFragment : Fragment() {
 
     }
 
+    private fun setUpFireStoreStorage(){
+       val userDetails = HashMap<String, Any>()
+        userDetails.apply {
+            put(KEY_USERNAME, nameSignUp)
+            put(KEY_USER_EMAIL, emailSignUp)
+            put(KEY_USER_PASSWORD, nameSignUp)
+            put(KEY_USER_ID, uid)
+        }
+
+        db.collection("Users")
+            .document("User${nameSignUp}")
+            .set(userDetails)
+            .addOnCompleteListener { fireStoreTask ->
+                if (fireStoreTask.isSuccessful){
+                    Timber.i("Data Saved!")
+                }
+                else{
+                    Timber.i("Data not saved %s", fireStoreTask.exception.toString())
+                }
+            }
+
+    }
+
     private fun dialogAnswer() {
         val alertDialog = activity?.let { MaterialAlertDialogBuilder(it) }
 
@@ -270,5 +294,11 @@ class SignUpFragment : Fragment() {
         NestedScrollViewSignUp?.isEnabled = state
         buttonSignUp?.isEnabled = state
         buttonSignUp?.text = ""
+    }
+
+    // string matchers
+    private fun stringMatches(password: String, confirmPassword: String): Boolean {
+        return password == confirmPassword
+
     }
 }
