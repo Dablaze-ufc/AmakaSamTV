@@ -1,6 +1,5 @@
 package com.blazingtech.amakasamtv.ui.auth.register
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +13,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.sign_up_fragment.*
 import kotlinx.android.synthetic.main.sign_up_fragment.view.*
 import timber.log.Timber
@@ -40,14 +40,11 @@ class SignUpFragment : Fragment() {
     private lateinit var nameSignUp: String
     private lateinit var emailSignUp: String
     private lateinit var passwordSignUp: String
-    private lateinit var uid : String
+    private lateinit var uid: String
 
     // firebase
     private lateinit var auth: FirebaseAuth
-    private val db : FirebaseFirestore by lazy{
-        FirebaseFirestore.getInstance()
-    }
-
+    private val db = Firebase.firestore
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,6 +52,7 @@ class SignUpFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.sign_up_fragment, container, false)
         auth = FirebaseAuth.getInstance()
+
         view.apply {
             buttonSignUp?.isEnabled = true
             buttonSignUp?.setOnClickListener {
@@ -188,6 +186,7 @@ class SignUpFragment : Fragment() {
                         removeProgressBar()
                         disableAllViews(true)
                         navigateToLoginFragment(editTextFieldEmailSignUp)
+                        buttonSignUp?.text = getString(R.string.sign_up)
                     } else {
                         val snackBar: Snackbar = Snackbar
                             .make(
@@ -236,28 +235,24 @@ class SignUpFragment : Fragment() {
 
     }
 
-    private fun setUpFireStoreStorage(){
-       val userDetails = HashMap<String, Any>()
-        userDetails.apply {
-            put(KEY_USERNAME, nameSignUp)
-            put(KEY_USER_EMAIL, emailSignUp)
-            put(KEY_USER_PASSWORD, nameSignUp)
-            put(KEY_USER_ID, uid)
-        }
+    private fun setUpFireStoreStorage() {
+        val userDetails = hashMapOf<String, Any>(
+            KEY_USERNAME to nameSignUp,
+            KEY_USER_EMAIL to emailSignUp,
+            KEY_USER_PASSWORD to passwordSignUp,
+            KEY_USER_ID to uid
+        )
 
         db.collection("Users")
-            .document("User${nameSignUp}")
-            .set(userDetails)
-            .addOnCompleteListener { fireStoreTask ->
-                if (fireStoreTask.isSuccessful){
-                    Timber.i("Data Saved!")
-                }
-                else{
-                    Timber.i("Data not saved %s", fireStoreTask.exception.toString())
-                }
+            .add(userDetails)
+            .addOnSuccessListener { documentReference ->
+                Timber.i("DocumentSnapshot added with ID: ${documentReference.id}")
             }
-
+            .addOnFailureListener { e ->
+                Timber.i( "Error adding document %s", e.toString())
+            }
     }
+
 
     private fun dialogAnswer() {
         val alertDialog = activity?.let { MaterialAlertDialogBuilder(it) }
@@ -273,7 +268,7 @@ class SignUpFragment : Fragment() {
 
     // progress bar set up
     private fun setUpProgressBar() {
-       Timber.i("setUpProgressBar: Started")
+        Timber.i("setUpProgressBar: Started")
         progressBarSignUp?.visibility = View.VISIBLE
     }
 
@@ -286,7 +281,7 @@ class SignUpFragment : Fragment() {
         Navigation.findNavController(v).navigate(R.id.action_signUpFragment_to_signInFragment)
     }
 
-    private fun disableAllViews(state: Boolean){
+    private fun disableAllViews(state: Boolean) {
         editTextFieldNameSignUp.isEnabled = state
         editTextFieldEmailSignUp.isEnabled = state
         editTextFieldPasswordSignUp.isEnabled = state
