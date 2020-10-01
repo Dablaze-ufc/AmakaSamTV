@@ -15,6 +15,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.profile_fragment.*
+import kotlinx.android.synthetic.main.sign_up_fragment.*
+import timber.log.Timber
 import java.util.*
 
 class ProfileFragment : Fragment() {
@@ -41,6 +43,7 @@ class ProfileFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
 
+        setUpProgressBar()
         db.collection("Users")
             .get()
             .addOnSuccessListener { result ->
@@ -51,10 +54,23 @@ class ProfileFragment : Fragment() {
 
                     textView_username.text = username
                     textView_email.text = email
+                    removeProgressBar()
                 }
             }
             .addOnFailureListener { exception ->
                 //  Log.w(TAG, "Error getting documents.", exception)
+                removeProgressBar()
             }
+    }
+
+    // progress bar set up
+    private fun setUpProgressBar() {
+        Timber.i("setUpProgressBar: Started")
+        progressBarProfile?.visibility = View.VISIBLE
+    }
+
+    private fun removeProgressBar() {
+        Timber.i("setUpProgressBar: Started")
+        progressBarProfile?.visibility = View.GONE
     }
 }
