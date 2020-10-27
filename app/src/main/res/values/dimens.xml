@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="textSize">26sp</dimen>
+    <dimen name="textSize">22sp</dimen>
     <dimen name="marginSpace">28dp</dimen>
     <dimen name="cornerRadius">8dp</dimen>
     <dimen name="boxStroke">2dp</dimen>

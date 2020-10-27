@@ -6,17 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import com.blazingtech.amakasamtv.HomeActivity
 import com.blazingtech.amakasamtv.R
 import com.blazingtech.amakasamtv.ui.auth.register.ForgetPasswordDialog
-import com.blazingtech.amakasamtv.util.AuthenticationSate.*
+import com.blazingtech.amakasamtv.util.LoadingDialog
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.sign_in_fragment.*
 import kotlinx.android.synthetic.main.sign_in_fragment.view.*
@@ -28,17 +27,23 @@ class SignInFragment : Fragment() {
     private val viewModel: SignInViewModel by viewModels()
     private lateinit var editTextFieldEmailSignIn: TextInputLayout
     private lateinit var editTextFieldPasswordSignIn: TextInputLayout
-
+    private val customLoadingDialog: LoadingDialog by lazy {
+        LoadingDialog(this@SignInFragment.requireActivity())
+    }
+    private val auth: FirebaseAuth by lazy {
+        FirebaseAuth.getInstance()
+    }
+    private lateinit var authListener: FirebaseAuth.AuthStateListener
 
     private lateinit var emailSignIn: String
     private lateinit var passwordSignIn: String
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.sign_in_fragment, container, false)
+        setupFirebaseAuth()
         view.apply {
             textViewSignUp.setOnClickListener {
                 Navigation.findNavController(view)
@@ -65,81 +70,109 @@ class SignInFragment : Fragment() {
         return view
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.apply {
 
-            authenticationSate.observe(viewLifecycleOwner, Observer {state ->
-                when(state){
-                    AUTHENTICATED ->{
-                        startActivity(Intent(requireContext(), HomeActivity::class.java))
-                    }
-                    UNAUTHENTICATED -> {
-                        Toast.makeText(requireContext(), "Please login", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-
-                }
-            })
-
-            authState.observe(viewLifecycleOwner, Observer { user ->
-
-                user?.let {
-                    if (it.isEmailVerified) {
-                        Timber.i("onAuthStateChanged: Authenticated with%s", it.email)
-                        Timber.i("onAuthStateChanged: sign_in%s", it.uid)
-                    } else {
-                        val snackBar = Snackbar
-                            .make(
-                                constraintLayoutSignIn,
-                                "Please verify your email, before signing in",
-                                Snackbar.LENGTH_LONG
-                            )
-                        removeProgressBar()
-                        disableAllViews(true)
-                        buttonSignIn?.text = getString(R.string.login)
-                        viewModel.signOut()
-                        snackBar.show()
-                    }
-                }
-            })
-
-        }
     }
+
+    /**
+     * --------------setup Firebase sign in with email and password---------------
+     */
 
     private fun signInWithEmailAndPassword(
         email: String,
         password: String
     ) {
-        setUpProgressBar()
-        disableAllViews(false)
-        activity?.let {
-            viewModel.signInWithEmailAndPassword(email, password)
-            viewModel.authState.observe(viewLifecycleOwner, Observer { user ->
-                if (!isUserVerified(user)) {
-                    val snackBar: Snackbar = Snackbar
-                        .make(
+        customLoadingDialog.setUpProgressBar()
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    if (!viewModel.isUserVerified(auth.currentUser)) {
+                        val snackBar = Snackbar.make(
                             constraintLayoutSignIn,
-                            "Your Email has not been verified ",
-                            Snackbar.LENGTH_LONG
+                            "Please Check Your Email " +
+                                    "before Login In",
+                            Snackbar.LENGTH_SHORT
                         )
-                    snackBar.show()
+                        snackBar.apply {
+                            setBackgroundTint(resources.getColor(R.color.colorPrimaryDark))
+                            show()
+                        }
+                        customLoadingDialog.removeProgressBar()
+                    } else {
+                        navigateToMainActivity()
+                        customLoadingDialog.removeProgressBar()
+                        requireActivity().finish()
+                    }
                 } else {
-                    Toast.makeText(activity, "Authentication Successful", Toast.LENGTH_LONG)
-                        .show()
-                    removeProgressBar()
-                    disableAllViews(true)
-                    buttonSignIn?.text = getString(R.string.login)
-                    startActivity(Intent(activity, HomeActivity::class.java))
-                    activity?.finish()
+                    val snackBar = Snackbar.make(
+                        constraintLayoutSignIn,
+                        "Unable to Sign in, ${task.exception?.message.toString()}",
+                        Snackbar.LENGTH_SHORT
+                    )
+                    snackBar.apply {
+                        setBackgroundTint(resources.getColor(R.color.colorPrimaryDark))
+                        setAction("Retry") {
+                            signInWithEmailAndPassword(email, password)
+                        }
+                        show()
+                    }
+                    customLoadingDialog.removeProgressBar()
                 }
+            }
+    }
 
-            })
+
+    /**
+     * --------------setup Firebase firebase auth---------------
+     */
+
+    private fun setupFirebaseAuth() {
+        authListener = FirebaseAuth.AuthStateListener {
+            val users: FirebaseUser? = auth.currentUser
+            if (users != null) {
+                if (users.isEmailVerified) {
+                    Timber.i(
+                        "onAuthStateChanged: Authenticated with%s", users.email
+                    )
+                    Timber.i(
+                        "onAuthStateChanged: sign_in%s", users.uid
+                    )
+                } else {
+                    val snackBar = Snackbar.make(
+                        constraintLayoutSignIn,
+                        "Please Check Your Email before \nLogin In",
+                        Snackbar.LENGTH_SHORT
+                    )
+                    snackBar.apply {
+                        setBackgroundTint(resources.getColor(R.color.colorPrimaryDark))
+                        show()
+                    }
+
+                    customLoadingDialog.removeProgressBar()
+                    viewModel.signOut()
+                }
+            } else {
+                Timber.i(
+                    "onAuthStateChanged: sign_out"
+                )
+            }
         }
     }
 
-    // validations
+
+    /**
+     * --------------setup navigation---------------
+     */
+
+    private fun navigateToMainActivity() {
+        startActivity(Intent(requireContext().applicationContext, HomeActivity::class.java))
+    }
+
+    /**
+     * --------------setup editText validations---------------
+     */
+
     private fun initValidateEmailSignIn(): Boolean {
         emailSignIn = editTextFieldEmailSignIn.editText?.text.toString().trim()
         val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
@@ -163,7 +196,6 @@ class SignInFragment : Fragment() {
 
     private fun initValidatePasswordSignIn(): Boolean {
         passwordSignIn = editTextFieldPasswordSignIn.editText?.text.toString().trim()
-//        val passwordPattern = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]))"
 
         return when {
             (passwordSignIn.isEmpty()) -> {
@@ -171,8 +203,13 @@ class SignInFragment : Fragment() {
                 editTextFieldPasswordSignIn.requestFocus()
                 false
             }
-            (passwordSignIn.length < 6) -> {
-                editTextFieldPasswordSignIn.error = "password must be more than 6 characters!"
+            (passwordSignIn.length < 7) -> {
+                editTextFieldPasswordSignIn.error = "password must be more than 7 characters!"
+                editTextFieldPasswordSignIn.requestFocus()
+                false
+            }
+            (passwordSignIn.length > 16) ->{
+                editTextFieldPasswordSignIn.error = "password must not be more than 16 characters!"
                 editTextFieldPasswordSignIn.requestFocus()
                 false
             }
@@ -183,34 +220,4 @@ class SignInFragment : Fragment() {
             }
         }
     }
-
-
-    private fun isUserVerified(users: FirebaseUser?): Boolean {
-        users?.let {
-            return it.isEmailVerified
-        }
-        return false
-    }
-
-    // set up progress bar
-    private fun setUpProgressBar() {
-        Timber.i("setUpProgressBar: Started")
-        progressBarSignIn?.visibility = View.VISIBLE
-    }
-
-    // Removed up progress bar
-    private fun removeProgressBar() {
-        Timber.i("removedProgressBar: gone")
-        progressBarSignIn?.visibility = View.GONE
-    }
-
-    // disable all views
-    private fun disableAllViews(state: Boolean) {
-        editTextFieldEmailSignIn.isEnabled = state
-        editTextFieldPasswordSignIn.isEnabled = state
-        buttonSignIn?.isEnabled = state
-        textViewForgotYourPassword?.isEnabled = state
-        buttonSignIn?.text = ""
-    }
-
 }

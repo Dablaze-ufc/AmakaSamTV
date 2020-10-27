@@ -8,6 +8,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import com.blazingtech.amakasamtv.R
+import com.blazingtech.amakasamtv.constants.Constants.KEY_USERNAME
+import com.blazingtech.amakasamtv.constants.Constants.KEY_USER_EMAIL
+import com.blazingtech.amakasamtv.constants.Constants.KEY_USER_ID
+import com.blazingtech.amakasamtv.constants.Constants.KEY_USER_PASSWORD
+import com.blazingtech.amakasamtv.util.LoadingDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
@@ -20,13 +25,6 @@ import kotlinx.android.synthetic.main.sign_up_fragment.view.*
 import timber.log.Timber
 
 class SignUpFragment : Fragment() {
-
-    companion object {
-        const val KEY_USER_ID = "uid"
-        const val KEY_USERNAME = "username"
-        const val KEY_USER_EMAIL = "email"
-        const val KEY_USER_PASSWORD = "password"
-    }
 
     private lateinit var viewModel: SignUpViewModel
 
@@ -45,6 +43,10 @@ class SignUpFragment : Fragment() {
     // firebase
     private lateinit var auth: FirebaseAuth
     private val db = Firebase.firestore
+
+    private val customLoadingDialog: LoadingDialog by lazy {
+        LoadingDialog(this@SignUpFragment.requireActivity())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -81,7 +83,110 @@ class SignUpFragment : Fragment() {
         // TODO: Use the ViewModel
     }
 
-    // validations
+    /**
+     * --------------setup Firebase Sign up with Email & Password---------------
+     */
+
+    private fun signUpWithEmailAndPassword(
+        email: String,
+        password: String,
+        username: String
+    ) {
+        customLoadingDialog.setUpProgressBar()
+        activity?.let {
+            FirebaseAuth.getInstance()
+                .createUserWithEmailAndPassword(email, password).addOnCompleteListener(it) { task ->
+                    if (task.isSuccessful) {
+                        Timber.i("onComplete: AuthState %s", FirebaseAuth.getInstance().currentUser)
+
+                        //firebase User
+                        val firebaseUser: FirebaseUser = auth.currentUser!!
+                        uid = firebaseUser.uid
+                        setUpFireStoreStorage()
+                        sendVerificationCode()
+                        customLoadingDialog.removeProgressBar()
+                        navigateToLoginFragment(editTextFieldEmailSignUp)
+                    } else {
+                        val snackBar: Snackbar = Snackbar
+                            .make(
+                                constraintLayoutSignUp,
+                                "Unable to register, ${task.exception?.localizedMessage.toString()}",
+                                Snackbar.LENGTH_LONG
+                            )
+                        snackBar.apply {
+                            setAction("Retry") {
+                                signUpWithEmailAndPassword(email, password, username)
+                            }
+                            setBackgroundTint(resources.getColor(R.color.colorPrimaryDark))
+                            show()
+                        }
+                        customLoadingDialog.removeProgressBar()
+                    }
+
+                }
+        }
+
+    }
+
+    /**
+     * --------------setup Firebase send verification code---------------
+     */
+
+    private fun sendVerificationCode() {
+        val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            activity?.let {
+                user.sendEmailVerification().addOnCompleteListener(it) { task ->
+                    if (task.isSuccessful) {
+                        dialogAnswer()
+                        Timber.i("dialog should be called in isSuccessful")
+                    } else {
+                        val snackBar: Snackbar = Snackbar
+                            .make(
+                                constraintLayoutSignUp,
+                                "Could not send Email verification code",
+                                Snackbar.LENGTH_LONG
+                            )
+                        snackBar.apply {
+                            setAction("Retry") {
+                                sendVerificationCode()
+                            }
+                            setBackgroundTint(resources.getColor(R.color.colorPrimaryDark))
+                            show()
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    /**
+     * --------------setup Firebase FireStore Data cache ---------------
+     */
+
+    private fun setUpFireStoreStorage() {
+        val userDetails = hashMapOf<String, Any>(
+            KEY_USERNAME to nameSignUp,
+            KEY_USER_EMAIL to emailSignUp,
+            KEY_USER_PASSWORD to passwordSignUp,
+            KEY_USER_ID to uid
+        )
+
+        db.collection("Users")
+            .add(userDetails)
+            .addOnSuccessListener { documentReference ->
+                Timber.i("DocumentSnapshot added with ID: ${documentReference.id}")
+            }
+            .addOnFailureListener { e ->
+                Timber.i("Error adding document %s", e.toString())
+            }
+    }
+
+    /**
+     * --------------setup editText validation---------------
+     */
+
     private fun initValidateName(): Boolean {
         nameSignUp = editTextFieldNameSignUp.editText?.text.toString()
         return when {
@@ -90,7 +195,7 @@ class SignUpFragment : Fragment() {
                 editTextFieldNameSignUp.requestFocus()
                 false
             }
-            (nameSignUp.length < 6) -> {
+            (nameSignUp.length < 8) -> {
                 editTextFieldNameSignUp.error = "username too short!"
                 editTextFieldNameSignUp.requestFocus()
                 false
@@ -106,7 +211,7 @@ class SignUpFragment : Fragment() {
 
     private fun initValidateEmailSignUp(): Boolean {
         emailSignUp = editTextFieldEmailSignUp.editText?.text.toString().trim()
-        var emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
+        val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
         return when {
             (emailSignUp.isEmpty()) -> {
                 editTextFieldEmailSignUp.error = "please enter an email!"
@@ -130,7 +235,6 @@ class SignUpFragment : Fragment() {
         passwordSignUp = editTextFieldPasswordSignUp.editText?.text.toString().trim()
         val confirmPasswordSignUp =
             editTextFieldConfirmPasswordSignUp.editText?.text.toString().trim()
-        var passwordPattern = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]))"
 
         return when {
             (passwordSignUp.isEmpty() && confirmPasswordSignUp.isEmpty()) -> {
@@ -145,8 +249,13 @@ class SignUpFragment : Fragment() {
                 editTextFieldPasswordSignUp.requestFocus()
                 false
             }
-            (passwordSignUp.length < 6) -> {
-                editTextFieldPasswordSignUp.error = "password must be more than 6 characters!"
+            (passwordSignUp.length < 7) -> {
+                editTextFieldPasswordSignUp.error = "password must be more than 7 characters!"
+                editTextFieldPasswordSignUp.requestFocus()
+                false
+            }
+            (passwordSignUp.length > 16) -> {
+                editTextFieldPasswordSignUp.error = "password must not be more than 16 characters!"
                 editTextFieldPasswordSignUp.requestFocus()
                 false
             }
@@ -161,139 +270,27 @@ class SignUpFragment : Fragment() {
 
     }
 
-    /**
-     * --------------setup Firebase Sign up with Email & Password---------------
-     */
-
-    private fun signUpWithEmailAndPassword(
-        email: String,
-        password: String,
-        username: String
-    ) {
-        setUpProgressBar()
-        disableAllViews(false)
-        activity?.let {
-            FirebaseAuth.getInstance()
-                .createUserWithEmailAndPassword(email, password).addOnCompleteListener(it) { task ->
-                    if (task.isSuccessful) {
-                        Timber.i("onComplete: AuthState %s", FirebaseAuth.getInstance().currentUser)
-
-                        //firebase User
-                        val firebaseUser: FirebaseUser = auth.currentUser!!
-                        uid = firebaseUser.uid
-                        setUpFireStoreStorage()
-                        sendVerificationCode()
-                        removeProgressBar()
-                        disableAllViews(true)
-                        navigateToLoginFragment(editTextFieldEmailSignUp)
-                        buttonSignUp?.text = getString(R.string.sign_up)
-                    } else {
-                        val snackBar: Snackbar = Snackbar
-                            .make(
-                                constraintLayoutSignUp,
-                                "Unable to register, ${task.exception.toString()}",
-                                Snackbar.LENGTH_LONG
-                            )
-                            .setAction("Retry") {
-                                signUpWithEmailAndPassword(email, password, username)
-                            }
-                        snackBar.show()
-                        removeProgressBar()
-                        disableAllViews(true)
-                        buttonSignUp?.text = getString(R.string.sign_up)
-                    }
-
-                }
-        }
-
-
-    }
-
-    private fun sendVerificationCode() {
-        val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-        if (user != null) {
-            activity?.let {
-                user.sendEmailVerification().addOnCompleteListener(it) { task ->
-                    if (task.isSuccessful) {
-                        dialogAnswer()
-                        Timber.i("dialog should be called in isSuccessful")
-                    } else {
-                        val snackBar: Snackbar = Snackbar
-                            .make(
-                                constraintLayoutSignUp,
-                                "Could not send Email verification code",
-                                Snackbar.LENGTH_LONG
-                            )
-                            .setAction("Retry") {
-                                sendVerificationCode()
-                            }
-                        snackBar.show()
-                    }
-                }
-            }
-        }
-
-    }
-
-    private fun setUpFireStoreStorage() {
-        val userDetails = hashMapOf<String, Any>(
-            KEY_USERNAME to nameSignUp,
-            KEY_USER_EMAIL to emailSignUp,
-            KEY_USER_PASSWORD to passwordSignUp,
-            KEY_USER_ID to uid
-        )
-
-        db.collection("Users")
-            .add(userDetails)
-            .addOnSuccessListener { documentReference ->
-                Timber.i("DocumentSnapshot added with ID: ${documentReference.id}")
-            }
-            .addOnFailureListener { e ->
-                Timber.i( "Error adding document %s", e.toString())
-            }
-    }
-
-
     private fun dialogAnswer() {
-        val alertDialog = activity?.let { MaterialAlertDialogBuilder(it) }
+        val alertDialog = MaterialAlertDialogBuilder(requireContext())
 
-        alertDialog?.setTitle("Email Verification Sent")
-        alertDialog?.setIcon(R.drawable.ic_mail)
-        alertDialog?.setMessage("please check your Email Inbox to verify \nand Continue")
-        alertDialog?.setPositiveButton(
+        alertDialog.setTitle("Email Verification Sent")
+        alertDialog.setIcon(R.drawable.ic_mail)
+        alertDialog.setMessage("please check your Email Inbox to verify \nand Continue")
+        alertDialog.setPositiveButton(
             "Ok"
         ) { dialog, which -> }
-        alertDialog?.show()
-    }
-
-    // progress bar set up
-    private fun setUpProgressBar() {
-        Timber.i("setUpProgressBar: Started")
-        progressBarSignUp?.visibility = View.VISIBLE
-    }
-
-    private fun removeProgressBar() {
-        Timber.i("setUpProgressBar: Started")
-        progressBarSignUp?.visibility = View.GONE
+        alertDialog.show()
     }
 
     private fun navigateToLoginFragment(v: View) {
         Navigation.findNavController(v).navigate(R.id.action_signUpFragment_to_signInFragment)
     }
 
-    private fun disableAllViews(state: Boolean) {
-        editTextFieldNameSignUp.isEnabled = state
-        editTextFieldEmailSignUp.isEnabled = state
-        editTextFieldPasswordSignUp.isEnabled = state
-        editTextFieldConfirmPasswordSignUp.isEnabled = state
-        NestedScrollViewSignUp?.isEnabled = state
-        buttonSignUp?.isEnabled = state
-        buttonSignUp?.text = ""
-    }
-
     // string matchers
-    private fun stringMatches(password: String, confirmPassword: String): Boolean {
+    private fun stringMatches(
+        password: String,
+        confirmPassword: String
+    ): Boolean {
         return password == confirmPassword
-
     }
 }

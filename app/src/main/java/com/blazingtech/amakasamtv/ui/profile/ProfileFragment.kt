@@ -8,6 +8,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.blazingtech.amakasamtv.R
+import com.blazingtech.amakasamtv.constants.Constants.KEY_USERNAME
+import com.blazingtech.amakasamtv.constants.Constants.KEY_USER_EMAIL
 import com.blazingtech.amakasamtv.ui.auth.register.SignUpFragment
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
@@ -21,13 +23,8 @@ import java.util.*
 
 class ProfileFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = ProfileFragment()
-    }
-
     private lateinit var viewModel: ProfileViewModel
     private val db = Firebase.firestore
-   // private val userRef = db.collection("Users")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -43,14 +40,13 @@ class ProfileFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
 
-        setUpProgressBar()
         db.collection("Users")
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
                     //   Log.d(TAG, "${document.id} => ${document.data}")
-                    val username = document.getString(SignUpFragment.KEY_USERNAME)
-                    val email = document.getString(SignUpFragment.KEY_USER_EMAIL)
+                    val username = document.getString(KEY_USERNAME)
+                    val email = document.getString(KEY_USER_EMAIL)
 
                     textView_username.text = username
                     textView_email.text = email
@@ -59,6 +55,8 @@ class ProfileFragment : Fragment() {
             }
             .addOnFailureListener { exception ->
                 //  Log.w(TAG, "Error getting documents.", exception)
+                textView_username.text = resources.getString(R.string.not_available)
+                textView_email.text = resources.getString(R.string.not_available)
                 removeProgressBar()
             }
     }

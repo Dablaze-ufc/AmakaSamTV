@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import com.blazingtech.amakasamtv.util.AuthenticationSate.AUTHENTICATED
 import com.blazingtech.amakasamtv.util.AuthenticationSate.UNAUTHENTICATED
+import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import timber.log.Timber
@@ -15,16 +16,6 @@ import timber.log.Timber
 
 class SignInViewModel : ViewModel()  {
     private var auth = FirebaseAuth.getInstance()
-
-    private val _authState = MutableLiveData<FirebaseUser>()
-    private val _isSuccessful = MutableLiveData<Boolean>()
-
-
-    val authState: LiveData<FirebaseUser> = _authState
-    val isSuccessful: LiveData<Boolean> = _isSuccessful
-
-
-
 
     val authenticationSate = FirebaseUserLiveData().map {
         if (it != null){
@@ -35,34 +26,13 @@ class SignInViewModel : ViewModel()  {
     }
 
 
-    init {
-        setUpFireBaseAuth()
-    }
-
-
-
-
-    private fun setUpFireBaseAuth() {
-        _authState.value = auth.currentUser
-    }
-
-    fun signInWithEmailAndPassword(email: String, password: String) {
-        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                _authState.value = auth.currentUser
-            } else {
-               _authState.value = null
-            }
-        }
-    }
-
     // verifying if user has check link
-//    private fun isUserVerified(users: FirebaseUser?): Boolean {
-//        users?.let {
-//            return it.isEmailVerified
-//        }
-//        return false
-//    }
+    fun isUserVerified(users: FirebaseUser?): Boolean {
+        users?.let {
+            return it.isEmailVerified
+        }
+        return false
+    }
 
     fun signOut() {
         auth.signOut()
