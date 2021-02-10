@@ -2,15 +2,17 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'dagger.hilt.android.plugin'
+apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.blazingtech.amakasamtv"
-        minSdkVersion 22
-        targetSdkVersion 29
+        minSdkVersion 23
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
@@ -23,26 +25,89 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+        freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
+    }
 }
 
 dependencies {
+    //default dependencies
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.3.1'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'com.google.firebase:firebase-firestore:21.5.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
-    implementation 'com.google.android.material:material:1.2.0'
-
-    //timber log libraries
-    implementation 'com.jakewharton.timber:timber:4.7.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
+    //material
+    def material_version = "1.2.0"
+    implementation "com.google.android.material:material:$material_version"
 
+    //timber log libraries
+    def timber_version = "4.7.1"
+    implementation "com.jakewharton.timber:timber:$timber_version"
 
+    //firebase
+    def firebase_version = "21.5.0"
+    implementation "com.google.firebase:firebase-firestore:$firebase_version"
+
+    //lifecycle
+    def viewmodel_lifecycle_version = "2.2.0"
+    implementation "androidx.lifecycle:lifecycle-extensions:$viewmodel_lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$viewmodel_lifecycle_version"
+
+    //dagger hilt
+    def hilt_version = "2.28-alpha"
+    def hilt_android_xVersion = "1.0.0-alpha02"
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_android_xVersion"
+    kapt "androidx.hilt:hilt-compiler:$hilt_android_xVersion"
+
+    //hilt view model
+    def hilt_viewmodels = "1.0.0-alpha01"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_viewmodels"
+    kapt "androidx.hilt:hilt-compiler:$hilt_viewmodels"
+
+    //fragment and livedata
+    def fragment_ktx = "1.2.5"
+    implementation "androidx.fragment:fragment-ktx:$fragment_ktx"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
+
+    // Navigation Component
+    def navigation_version = "2.3.1"
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
+
+    //room database
+    def room = "2.2.5"
+    implementation "androidx.room:room-runtime:$room"
+    implementation "androidx.room:room-ktx:$room"
+    kapt "androidx.room:room-compiler:$room"
+
+    //glide
+    def glide_version = "4.8.0"
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
+
+    // Coroutines
+    def coroutines_version = "1.3.9"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+
+    // DataStore
+    def dataStore_Version = "1.0.0-alpha02"
+    implementation "androidx.datastore:datastore-preferences:$dataStore_Version"
+}
+
+kapt {
+    correctErrorTypes true
 }
